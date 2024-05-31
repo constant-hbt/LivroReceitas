@@ -1,8 +1,8 @@
 ﻿namespace RecipeBook.Communication.Requests;
 
-public class RequestRegisterUserJson
+public class RequestRegisterUserJson(string name, string email, string password)
 {
-    public string Name { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
+    public string Name { get; } = name;
+    public string Email { get; } = email;
+    public string Password { get; } = password;
 }
