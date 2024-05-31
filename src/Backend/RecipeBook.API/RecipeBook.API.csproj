@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <InvariantGlobalization>true</InvariantGlobalization>
+    <InvariantGlobalization>false</InvariantGlobalization>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +15,7 @@
     <ProjectReference Include="..\..\Shared\RecipeBook.Communication\RecipeBook.Communication.csproj" />
     <ProjectReference Include="..\..\Shared\RecipeBook.Exceptions\RecipeBook.Exceptions.csproj" />
     <ProjectReference Include="..\RecipeBook.Application\RecipeBook.Application.csproj" />
+    <ProjectReference Include="..\RecipeBook.Infrastructure\RecipeBook.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
