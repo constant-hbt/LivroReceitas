@@ -1,0 +1,55 @@
+﻿using CommonTestUtilities.Cryptography;
+using CommonTestUtilities.Mapper;
+using CommonTestUtilities.Repositories;
+using CommonTestUtilities.Requests;
+using FluentAssertions;
+using RecipeBook.Application.UseCases.User.Register;
+using RecipeBook.Communication.Responses;
+using RecipeBook.Exceptions;
+using RecipeBook.Exceptions.ExceptionsBase;
+using Xunit;
+
+namespace UseCases.Test.User.Register;
+public class RegisterUserUseCaseTest
+{
+    private RegisterUserUseCase CreateUseCase(string? email = null)
+    {
+        var writeRepository = UserWriteOnlyRepositoryBuilder.Build();
+        var unitOfWork = UnitOfWorkBuilder.Build();
+        var mapper = MapperBuilder.Build();
+        var passwordEncripter = PasswordEncripterBuilder.Build();
+        var readRepositoryBuilder = new UserReadOnlyRepositoryBuilder();
+
+        if (!string.IsNullOrWhiteSpace(email))
+            readRepositoryBuilder.ExistActiveUserWithEmail(email);
+
+        var readRepository = readRepositoryBuilder.Build();
+
+        return new RegisterUserUseCase(writeRepository, readRepository, mapper, passwordEncripter, unitOfWork);
+    }
+
+    [Fact]
+    public async Task Success()
+    {
+        var request = new RequestRegisterUserJsonBuilder().Build();
+
+        var useCase = CreateUseCase();
+
+        var result = await useCase.Execute(request);
+
+        result.Should().NotBeNull();
+        result.Name.Should().Be(request.Name);
+    }
+
+    [Fact]
+    public async Task Error_Email_Already_Registered()
+    {
+        var request = new RequestRegisterUserJsonBuilder().Build();
+        var useCase = CreateUseCase(request.Email);
+
+        Func<Task<ResponseRegisteredUserJson>> act = async () => await useCase.Execute(request);
+
+        (await act.Should().ThrowAsync<ErrorOnValidationException>())
+            .Where(e => e.ErrorMessages.Count == 1 && e.ErrorMessages.Contains(ResourceMessagesExceptions.EMAIL_ALREADY_REGISTERED));
+    }
+}

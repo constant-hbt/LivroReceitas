@@ -23,9 +23,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeBook.Communication", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeBook.Exceptions", "src\Shared\RecipeBook.Exceptions\RecipeBook.Exceptions.csproj", "{9F50726E-2C38-4C42-ADA6-8B3F2A55CF46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validators.Test", "tests\Validators.Test\Validators.Test.csproj", "{F06DABA1-28D0-4206-9118-E377B1E434BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Validators.Test", "tests\Validators.Test\Validators.Test.csproj", "{F06DABA1-28D0-4206-9118-E377B1E434BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonTestUtilities", "tests\CommonTestUtilities\CommonTestUtilities.csproj", "{F1C33B93-8629-4A10-954A-BCAA8E55267D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonTestUtilities", "tests\CommonTestUtilities\CommonTestUtilities.csproj", "{F1C33B93-8629-4A10-954A-BCAA8E55267D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UseCases.Test", "tests\UseCases.Test\UseCases.Test.csproj", "{5CA5ED8C-3636-419F-AA6D-23536E41BC13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +67,10 @@ Global
 		{F1C33B93-8629-4A10-954A-BCAA8E55267D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1C33B93-8629-4A10-954A-BCAA8E55267D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1C33B93-8629-4A10-954A-BCAA8E55267D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CA5ED8C-3636-419F-AA6D-23536E41BC13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CA5ED8C-3636-419F-AA6D-23536E41BC13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CA5ED8C-3636-419F-AA6D-23536E41BC13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CA5ED8C-3636-419F-AA6D-23536E41BC13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,6 +86,7 @@ Global
 		{9F50726E-2C38-4C42-ADA6-8B3F2A55CF46} = {2303015B-B230-4EB3-B6A8-C875733C349F}
 		{F06DABA1-28D0-4206-9118-E377B1E434BE} = {828E9E03-3864-4CBF-8B72-7D61A30332EC}
 		{F1C33B93-8629-4A10-954A-BCAA8E55267D} = {828E9E03-3864-4CBF-8B72-7D61A30332EC}
+		{5CA5ED8C-3636-419F-AA6D-23536E41BC13} = {828E9E03-3864-4CBF-8B72-7D61A30332EC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ACD283FA-CD4F-425F-873C-51E0FD1B5612}
