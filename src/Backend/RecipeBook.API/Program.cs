@@ -46,6 +46,9 @@ app.Run();
 
 void MigrateDatabase()
 {
+    if (builder.Configuration.IsUnitTestEnviroment())
+        return;
+
     var databaseType = configuration!.DatabaseType();
     var connectionString = configuration!.ConnectionString();
 
@@ -53,3 +56,6 @@ void MigrateDatabase()
 
     DatabaseMigration.Migrate(databaseType, connectionString, serviceScope.ServiceProvider);
 }
+
+// Necessário para ser utilizado em testes de integração, no projeto WebApi.Test
+public partial class Program { }
