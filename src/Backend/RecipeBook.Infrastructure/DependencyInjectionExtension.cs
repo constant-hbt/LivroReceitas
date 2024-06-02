@@ -15,6 +15,11 @@ public static class DependencyInjectionExtension
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfigurationManager configuration)
     {
+        AddRepositories(services);
+
+        if (configuration.IsUnitTestEnviroment())
+            return;
+
         var databaseType = configuration.DatabaseType();
 
         if (databaseType == DatabaseType.PostgreSQL)
@@ -34,8 +39,6 @@ public static class DependencyInjectionExtension
         }  
         else
             throw new NotImplementedException();
-
-        AddRepositories(services);
     }
 
     private static void AddDbContext_PostgreSQL(IServiceCollection services, IConfigurationManager configuration)
