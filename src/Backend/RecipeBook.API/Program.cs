@@ -42,7 +42,7 @@ app.MapControllers();
 
 MigrateDatabase();
 
-app.Run();
+await app.RunAsync();
 
 void MigrateDatabase()
 {
@@ -58,4 +58,7 @@ void MigrateDatabase()
 }
 
 // Necessário para ser utilizado em testes de integração, no projeto WebApi.Test
-public partial class Program { }
+public partial class Program 
+{
+    protected Program() { }
+}
