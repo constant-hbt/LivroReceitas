@@ -5,6 +5,7 @@ using CommonTestUtilities.Requests;
 using FluentAssertions;
 using RecipeBook.Application.UseCases.User.Register;
 using RecipeBook.Communication.Responses;
+using RecipeBook.Domain.Extensions;
 using RecipeBook.Exceptions;
 using RecipeBook.Exceptions.ExceptionsBase;
 using Xunit;
@@ -12,7 +13,7 @@ using Xunit;
 namespace UseCases.Test.User.Register;
 public class RegisterUserUseCaseTest
 {
-    private RegisterUserUseCase CreateUseCase(string? email = null)
+    private static RegisterUserUseCase CreateUseCase(string? email = null)
     {
         var writeRepository = UserWriteOnlyRepositoryBuilder.Build();
         var unitOfWork = UnitOfWorkBuilder.Build();
@@ -20,7 +21,7 @@ public class RegisterUserUseCaseTest
         var passwordEncripter = PasswordEncripterBuilder.Build();
         var readRepositoryBuilder = new UserReadOnlyRepositoryBuilder();
 
-        if (!string.IsNullOrWhiteSpace(email))
+        if (email.NotEmpty())
             readRepositoryBuilder.ExistActiveUserWithEmail(email);
 
         var readRepository = readRepositoryBuilder.Build();
