@@ -2,5 +2,5 @@
 
 public class ResponseRegisteredUserJson(string name)
 {
-    public string Name { get; } = name;
+    public string Name { get; set; } = name;
 }

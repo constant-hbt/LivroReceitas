@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Application.Services.AutoMapper;
 using RecipeBook.Application.Services.Cryptography;
+using RecipeBook.Application.UseCases.Login.DoLogin;
 using RecipeBook.Application.UseCases.User.Register;
 
 namespace RecipeBook.Application;
@@ -31,5 +32,6 @@ public static class DependencyInjectionExtension
     private static void AddUseCases(IServiceCollection services)
     {
         services.AddScoped<IRegisterUseCase, RegisterUserUseCase>();
+        services.AddScoped<IDoLoginUseCase, DoLoginUseCase>();
     }
 }
