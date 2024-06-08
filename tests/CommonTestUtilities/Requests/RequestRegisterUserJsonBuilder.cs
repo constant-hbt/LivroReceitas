@@ -32,8 +32,6 @@ public class RequestRegisterUserJsonBuilder : Faker<RequestRegisterUserJson>
 
             return new RequestRegisterUserJson(name, email, password);
         });
-
-        this.Generate();
     }
 
     public RequestRegisterUserJson Build()
