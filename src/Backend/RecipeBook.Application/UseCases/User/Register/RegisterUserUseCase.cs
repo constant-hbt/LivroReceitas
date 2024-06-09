@@ -5,6 +5,7 @@ using RecipeBook.Communication.Requests;
 using RecipeBook.Communication.Responses;
 using RecipeBook.Domain.Repositories;
 using RecipeBook.Domain.Repositories.User;
+using RecipeBook.Domain.Security.Tokens;
 using RecipeBook.Exceptions;
 using RecipeBook.Exceptions.ExceptionsBase;
 
@@ -17,19 +18,22 @@ public class RegisterUserUseCase : IRegisterUseCase
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly PasswordEncripter _passwordEncripter;
+    private readonly IAccessTokenGenerator _accessTokenGenerator;
 
     public RegisterUserUseCase(
         IUserWriteOnlyRepository userWriteOnlyRepository,
         IUserReadOnlyRepository userReadOnlyRepository,
         IMapper mapper,
         PasswordEncripter passwordEncripter,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IAccessTokenGenerator accessTokenGenerator)
     {
         _userWriteOnlyRepository = userWriteOnlyRepository;
         _userReadOnlyRepository = userReadOnlyRepository;
         _mapper = mapper;
         _passwordEncripter = passwordEncripter;
         _unitOfWork = unitOfWork;
+        _accessTokenGenerator = accessTokenGenerator;
     }
 
     public async Task<ResponseRegisteredUserJson> Execute(RequestRegisterUserJson request)
@@ -43,7 +47,14 @@ public class RegisterUserUseCase : IRegisterUseCase
         await _userWriteOnlyRepository.Add(user);
         await _unitOfWork.Commit();
 
-        return new ResponseRegisteredUserJson(user.Name);
+        return new ResponseRegisteredUserJson
+        {
+            Name = user.Name,
+            Tokens = new ResponseTokensJson
+            {
+                AccessToken = _accessTokenGenerator.Generate(user.UserIdentifier)
+            }
+        };
     }
 
     private async Task Validate(RequestRegisterUserJson request)

@@ -2,6 +2,7 @@
 using CommonTestUtilities.Mapper;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
+using CommonTestUtilities.Tokens;
 using FluentAssertions;
 using RecipeBook.Application.UseCases.User.Register;
 using RecipeBook.Communication.Responses;
@@ -20,13 +21,14 @@ public class RegisterUserUseCaseTest
         var mapper = MapperBuilder.Build();
         var passwordEncripter = PasswordEncripterBuilder.Build();
         var readRepositoryBuilder = new UserReadOnlyRepositoryBuilder();
+        var accessTokenGenerator = JwtTokenGeneratorBuilder.Build();
 
         if (email.NotEmpty())
             readRepositoryBuilder.ExistActiveUserWithEmail(email);
 
         var readRepository = readRepositoryBuilder.Build();
 
-        return new RegisterUserUseCase(writeRepository, readRepository, mapper, passwordEncripter, unitOfWork);
+        return new RegisterUserUseCase(writeRepository, readRepository, mapper, passwordEncripter, unitOfWork, accessTokenGenerator);
     }
 
     [Fact]
@@ -39,7 +41,9 @@ public class RegisterUserUseCaseTest
         var result = await useCase.Execute(request);
 
         result.Should().NotBeNull();
+        result.Tokens.Should().NotBeNull();
         result.Name.Should().Be(request.Name);
+        result.Tokens.AccessToken.Should().NotBeNullOrWhiteSpace();
     }
 
     [Fact]
