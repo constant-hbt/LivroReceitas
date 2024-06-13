@@ -28,4 +28,8 @@
     <ProjectReference Include="..\CommonTestUtilities\CommonTestUtilities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="User\Update\" />
+  </ItemGroup>
+
 </Project>
