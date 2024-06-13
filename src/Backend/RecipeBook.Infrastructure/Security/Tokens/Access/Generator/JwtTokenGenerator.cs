@@ -2,7 +2,6 @@
 using RecipeBook.Domain.Security.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace RecipeBook.Infrastructure.Security.Tokens.Access.Generator;
 public class JwtTokenGenerator : JwtTokenHandler, IAccessTokenGenerator
