@@ -1,6 +1,6 @@
 ﻿namespace RecipeBook.Domain.Extensions;
 public static class BooleanExtension
 {
-    public static bool NotEmpty(this bool value) => !value;
+    public static bool IsFalse(this bool value) => !value;
 }
 

@@ -1,8 +1,8 @@
 ﻿namespace RecipeBook.Exceptions.ExceptionsBase;
 
-public abstract class RecipeBookException : SystemException
+public class RecipeBookException : SystemException
 {
     protected RecipeBookException() { }
 
-    protected RecipeBookException(string message) : base(message) { }
+    public RecipeBookException(string message) : base(message) { }
 }
