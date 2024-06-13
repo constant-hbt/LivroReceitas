@@ -15,4 +15,6 @@ public class ResponseErrorJson
     }
 
     public IList<string> Errors { get; }
+
+    public bool TokenIsExpired { get; set; }
 }

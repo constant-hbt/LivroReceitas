@@ -6,10 +6,13 @@ using RecipeBook.Domain.Enums;
 using RecipeBook.Domain.Repositories;
 using RecipeBook.Domain.Repositories.User;
 using RecipeBook.Domain.Security.Tokens;
+using RecipeBook.Domain.Services.LoggedUser;
 using RecipeBook.Infrastructure.DataAccess;
 using RecipeBook.Infrastructure.DataAccess.Repositories;
 using RecipeBook.Infrastructure.Extensions;
 using RecipeBook.Infrastructure.Security.Tokens.Access.Generator;
+using RecipeBook.Infrastructure.Security.Tokens.Access.Validator;
+using RecipeBook.Infrastructure.Services.LoggedUser;
 using System.Reflection;
 
 namespace RecipeBook.Infrastructure;
@@ -18,6 +21,7 @@ public static class DependencyInjectionExtension
     public static void AddInfrastructure(this IServiceCollection services, IConfigurationManager configuration)
     {
         AddRepositories(services);
+        AddLoggedUser(services);
         AddTokens(services, configuration);
 
         if (configuration.IsUnitTestEnviroment())
@@ -125,8 +129,14 @@ public static class DependencyInjectionExtension
     private static void AddTokens(IServiceCollection services, IConfigurationManager configuration)
     {
         var expirationTimeMinutes = configuration.GetValue<uint>("Settings:Jwt:ExpirationTimeMinutes");
-        var signingKey = configuration.GetValue<string>("Settings:Jwt:SigningKey");
+        var signingKey = configuration.GetValue<string>("Settings:Jwt:SigningKey")!;
 
-        services.AddScoped<IAccessTokenGenerator>(options => new JwtTokenGenerator(expirationTimeMinutes, signingKey!));
+        services.AddScoped<IAccessTokenGenerator>(options => new JwtTokenGenerator(expirationTimeMinutes, signingKey));
+        services.AddScoped<IAccessTokenValidator>(options => new JwtTokenValidator(signingKey));
+    }
+
+    private static void AddLoggedUser(IServiceCollection services)
+    {
+        services.AddScoped<ILoggedUser, LoggedUser>();
     }
 }
