@@ -46,6 +46,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
     public string UserPassword => _password;
 
+    public Guid UserIdentifier => _user.UserIdentifier;
+
     private void StartDatabase(RecipeBookDbContext dbContext)
     {
         (_user, _password) = UserBuilder.Build();
