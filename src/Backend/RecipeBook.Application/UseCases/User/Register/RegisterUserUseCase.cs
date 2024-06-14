@@ -42,7 +42,7 @@ public class RegisterUserUseCase : IRegisterUseCase
 
         var user = _mapper.Map<Domain.Entities.User>(request);
 
-        user.SetPassword(_passwordEncripter.Encrypt(request.Password));
+        user.Password = _passwordEncripter.Encrypt(request.Password);
 
         await _userWriteOnlyRepository.Add(user);
         await _unitOfWork.Commit();

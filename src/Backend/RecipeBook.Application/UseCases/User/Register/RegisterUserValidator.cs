@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using RecipeBook.Application.SharedValidators;
 using RecipeBook.Communication.Requests;
 using RecipeBook.Domain.Extensions;
 using RecipeBook.Exceptions;
@@ -11,7 +12,7 @@ public class RegisterUserValidator : AbstractValidator<RequestRegisterUserJson>
     {
         RuleFor(user => user.Name).NotEmpty().WithMessage(ResourceMessagesExceptions.NAME_EMPTY);
         RuleFor(user => user.Email).NotEmpty().WithMessage(ResourceMessagesExceptions.EMAIL_EMPTY);
-        RuleFor(user => user.Password.Length).GreaterThanOrEqualTo(6).WithMessage(ResourceMessagesExceptions.PASSWORD_INVALID);
+        RuleFor(user => user.Password).SetValidator(new PasswordValidator<RequestRegisterUserJson>());
 
         When(user => user.Email.NotEmpty(), () =>
         {
