@@ -135,6 +135,12 @@
   <data name="NO_TOKEN" xml:space="preserve">
     <value>Faça login ou cadastre-se para acessar.</value>
   </data>
+  <data name="PASSWORD_DIFFERENT_CURRENT_PASSWORD" xml:space="preserve">
+    <value>Senha diferente da senha atual.</value>
+  </data>
+  <data name="PASSWORD_EMPTY" xml:space="preserve">
+    <value>Senha vazia.</value>
+  </data>
   <data name="PASSWORD_INVALID" xml:space="preserve">
     <value>A palavra-chave deve ter mais de 6 caracteres.</value>
   </data>
