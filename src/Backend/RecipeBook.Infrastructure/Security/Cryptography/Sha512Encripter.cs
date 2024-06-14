@@ -1,9 +1,9 @@
-﻿using System.Security.Cryptography;
+﻿using RecipeBook.Domain.Security.Cryptography;
+using System.Security.Cryptography;
 using System.Text;
 
-namespace RecipeBook.Application.Services.Cryptography;
-
-public class PasswordEncripter(string additionalKey)
+namespace RecipeBook.Infrastructure.Security.Cryptography;
+public class Sha512Encripter(string additionalKey) : IPasswordEncripter
 {
     private readonly string _additionalKey = additionalKey;
 
