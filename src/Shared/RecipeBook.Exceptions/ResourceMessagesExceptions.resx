@@ -117,6 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AT_LEAST_ONE_INGREDIENT" xml:space="preserve">
+    <value>Enter at least one ingredient.</value>
+  </data>
+  <data name="AT_LEAST_ONE_INSTRUCTION" xml:space="preserve">
+    <value>Provide at least one instruction.</value>
+  </data>
+  <data name="COOKING_TIME_NOT_SUPPORTED" xml:space="preserve">
+    <value>Cooking time is not supported.</value>
+  </data>
+  <data name="DIFFICULTY_LEVEL_NOT_SUPPORTED" xml:space="preserve">
+    <value>Difficulty level is not supported.</value>
+  </data>
+  <data name="DISH_TYPE_NOT_SUPPORTED" xml:space="preserve">
+    <value>Dish type not supported.</value>
+  </data>
   <data name="EMAIL_ALREADY_REGISTERED" xml:space="preserve">
     <value>E-mail already registered.</value>
   </data>
@@ -128,6 +143,18 @@
   </data>
   <data name="EMAIL_OR_PASSWORD_INVALID" xml:space="preserve">
     <value>Invalid email and/or password.</value>
+  </data>
+  <data name="INGREDIENT_EMPTY" xml:space="preserve">
+    <value>Empty ingredient.</value>
+  </data>
+  <data name="INSTRUCTION_EXCEEDS_LIMIT_CHARACTERS" xml:space="preserve">
+    <value>Instruction text exceeds character limit.</value>
+  </data>
+  <data name="INSTRUCTION_TEXT_EMPTY" xml:space="preserve">
+    <value>Empty instruction text.</value>
+  </data>
+  <data name="LESS_OR_EQUAL_ZERO_INSTRUCTION_STEP" xml:space="preserve">
+    <value>Instruction step less than or equal to zero.</value>
   </data>
   <data name="NAME_EMPTY" xml:space="preserve">
     <value>The name cannot be empty.</value>
@@ -143,6 +170,12 @@
   </data>
   <data name="PASSWORD_INVALID" xml:space="preserve">
     <value>The password must be longer than 6 characters.</value>
+  </data>
+  <data name="RECIPE_TITLE_EMPTY" xml:space="preserve">
+    <value>The recipe title must not be empty.</value>
+  </data>
+  <data name="TWO_OR_MORE_INSTRUCTIONS_SAME_ORDER" xml:space="preserve">
+    <value>Two or more instructions have the same order.</value>
   </data>
   <data name="UNKNOW_ERROR" xml:space="preserve">
     <value>Unknow error.</value>
