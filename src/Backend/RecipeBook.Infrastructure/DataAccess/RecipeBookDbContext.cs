@@ -16,6 +16,11 @@ public class RecipeBookDbContext : DbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(RecipeBookDbContext).Assembly);
 
+        SetValueConverters(modelBuilder);
+    }
+
+    private static void SetValueConverters(ModelBuilder modelBuilder)
+    {
         var dateTimeConverter = new UtcDateTimeConverter();
         var nullableDateTimeConverter = new NullableUtcDateTimeConverter();
 
