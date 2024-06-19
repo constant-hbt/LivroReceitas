@@ -49,6 +49,7 @@ public class RegisterRecipeUseCase : IRegisterRecipeUseCase
     private static void Validate(RequestRecipeJson request) 
     {
         var result = new RecipeValidator().Validate(request);
+
         if (result.IsValid.IsFalse())
             throw new ErrorOnValidationException(result.Errors.Select(e => e.ErrorMessage).Distinct().ToList());
     }
