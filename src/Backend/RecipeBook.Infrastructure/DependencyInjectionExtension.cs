@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Domain.Enums;
 using RecipeBook.Domain.Repositories;
+using RecipeBook.Domain.Repositories.Recipe;
 using RecipeBook.Domain.Repositories.User;
 using RecipeBook.Domain.Security.Cryptography;
 using RecipeBook.Domain.Security.Tokens;
@@ -89,6 +90,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IUserWriteOnlyRepository, UserRepository>();
         services.AddScoped<IUserReadOnlyRepository, UserRepository>();
         services.AddScoped<IUserUpdateOnlyRepository, UserRepository>();
+        services.AddScoped<IRecipeWriteOnlyRepository, RecipeRepository>();
     }
 
     private static void AddFluentMigrator_PostgreSQL(IServiceCollection services, IConfigurationManager configuration)
