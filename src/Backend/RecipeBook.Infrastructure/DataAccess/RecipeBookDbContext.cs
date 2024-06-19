@@ -11,6 +11,7 @@ public class RecipeBookDbContext : DbContext
     }
 
     public DbSet<User> Users { get; set; }
+    public DbSet<Recipe> Recipes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
