@@ -7,7 +7,7 @@ using RecipeBook.Domain.Services.LoggedUser;
 using RecipeBook.Exceptions.ExceptionsBase;
 
 namespace RecipeBook.Application.UseCases.Recipe.Filter;
-internal class FilterRecipeUseCase(IMapper mapper, ILoggedUser loggedUser, IRecipeReadOnlyRepository repository) : IFilterRecipeUseCase
+public class FilterRecipeUseCase(IMapper mapper, ILoggedUser loggedUser, IRecipeReadOnlyRepository repository) : IFilterRecipeUseCase
 {
     private readonly IMapper _mapper = mapper;
     private readonly ILoggedUser _loggedUser = loggedUser;
