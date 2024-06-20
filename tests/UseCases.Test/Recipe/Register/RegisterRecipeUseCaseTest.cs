@@ -38,8 +38,6 @@ public class RegisterRecipeUseCaseTest
 
         var useCase = CreateUseCase(user);
 
-        var result = await useCase.Execute(request);
-
         Func<Task<ResponseRegisteredRecipeJson>> act = async () => await useCase.Execute(request);
 
         (await act.Should().ThrowAsync<ErrorOnValidationException>())
