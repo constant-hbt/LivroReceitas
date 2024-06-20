@@ -3,6 +3,7 @@ using FluentAssertions;
 using RecipeBook.Application.UseCases.Recipe;
 using RecipeBook.Communication.Enums;
 using RecipeBook.Exceptions;
+using System.ComponentModel.DataAnnotations;
 using Xunit;
 
 namespace Validators.Test.Recipe;
@@ -206,5 +207,17 @@ public class RecipeValidatorTest
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().ContainSingle().And.Contain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.INSTRUCTION_TEXT_EMPTY));
+    }
+
+    [Fact]
+    public void Error_Instructions_Too_Long()
+    {
+        var request = RequestRecipeJsonBuilder.Build();
+        request.Instructions.First().Text = RequestStringGenerator.Paragraphs(minCharacters: 2001);
+
+        var result = new RecipeValidator().Validate(request);
+
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().ContainSingle().And.Contain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.INSTRUCTION_EXCEEDS_LIMIT_CHARACTERS));
     }
 }

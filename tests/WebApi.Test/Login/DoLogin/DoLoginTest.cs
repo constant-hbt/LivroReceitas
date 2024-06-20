@@ -52,7 +52,7 @@ public class DoLoginTest : RecipeBookClassFixture
     {
         var request = RequestLoginJsonBuilder.Build();
 
-        var response = await DoPost(_method, request, culture);
+        var response = await DoPost(_method, request, culture: culture);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
 

@@ -3,14 +3,9 @@ using CommonTestUtilities.Tokens;
 using FluentAssertions;
 using RecipeBook.Communication.Requests;
 using RecipeBook.Exceptions;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using WebApi.Test.InlineData;
 using Xunit;
 
@@ -18,6 +13,7 @@ namespace WebApi.Test.User.ChangePassword;
 public class ChangePasswordTest : RecipeBookClassFixture
 {
     private const string METHOD = "user/change-password";
+    private const string LOGIN_METHOD = "login";
 
     private readonly string _password;
     private readonly string _email;
@@ -48,12 +44,12 @@ public class ChangePasswordTest : RecipeBookClassFixture
             Password = _password
         };
 
-        response = await DoPost("login", loginRequest);
+        response = await DoPost(LOGIN_METHOD, loginRequest);
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
 
         loginRequest.Password = request.NewPassword;
 
-        response = await DoPost("login", loginRequest);
+        response = await DoPost(LOGIN_METHOD, loginRequest);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 

@@ -45,7 +45,7 @@ public class RegisterUserTest : RecipeBookClassFixture
         var request = new RequestRegisterUserJsonBuilder().Build();
         request.Name = string.Empty;
 
-        var response = await DoPost(_method, request, culture);
+        var response = await DoPost(_method, request, culture: culture);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 

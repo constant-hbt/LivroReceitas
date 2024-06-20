@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using RecipeBook.Domain.Extensions;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Xunit;
 
@@ -12,9 +13,10 @@ public abstract class RecipeBookClassFixture : IClassFixture<CustomWebApplicatio
         _httpClient = factory.CreateClient();
     }
 
-    protected async Task<HttpResponseMessage> DoPost(string method, object request, string culture = "en")
+    protected async Task<HttpResponseMessage> DoPost(string method, object request, string token = "", string culture = "en")
     {
         ChangeRequestCulture(culture);
+        AuthorizeRequest(token);
 
         return await _httpClient.PostAsJsonAsync(method, request);
     }
