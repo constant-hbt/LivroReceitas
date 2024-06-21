@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using RecipeBook.Domain.Dtos;
 using RecipeBook.Domain.Entities;
 using RecipeBook.Domain.Extensions;
 using RecipeBook.Domain.Repositories.Recipe;
 
 namespace RecipeBook.Infrastructure.DataAccess.Repositories;
-public class RecipeRepository(RecipeBookDbContext dbContext) : IRecipeWriteOnlyRepository, IRecipeReadOnlyRepository
+public class RecipeRepository(RecipeBookDbContext dbContext) : IRecipeWriteOnlyRepository, IRecipeReadOnlyRepository, IRecipeUpdateOnlyRepository
 {
     private readonly RecipeBookDbContext _dbContext = dbContext;
 
@@ -44,13 +45,29 @@ public class RecipeRepository(RecipeBookDbContext dbContext) : IRecipeWriteOnlyR
         return await query.ToListAsync();
     }
 
-    public async Task<Recipe?> GetById(User user, long recipeId)
+    async Task<Recipe?> IRecipeReadOnlyRepository.GetById(User user, long recipeId)
     {
-        return await _dbContext.Recipes
-            .AsNoTracking()
+        return await GetFullRecipe()
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(recipe => recipe.Active && recipe.Id == recipeId && recipe.UserId == user.Id);
+    }
+
+    async Task<Recipe?> IRecipeUpdateOnlyRepository.GetById(User user, long recipeId)
+    {
+        return await GetFullRecipe()
+                        .FirstOrDefaultAsync(recipe => recipe.Active && recipe.Id == recipeId && recipe.UserId == user.Id);
+    }
+
+    public void Update(Recipe recipe)
+    {
+        _dbContext.Recipes.Update(recipe);
+    }
+
+    private IIncludableQueryable<Recipe, IList<DishType>> GetFullRecipe()
+    {
+        return _dbContext.Recipes
             .Include(r => r.Ingredients)
             .Include(r => r.Instructions)
-            .Include(r => r.DishTypes)
-            .FirstOrDefaultAsync(recipe => recipe.Active && recipe.Id == recipeId && recipe.UserId == user.Id);
+            .Include(r => r.DishTypes);
     }
 }
