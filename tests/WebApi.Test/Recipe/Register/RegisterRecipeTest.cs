@@ -32,7 +32,7 @@ public class RegisterRecipeTest : RecipeBookClassFixture
 
         await using var responseBody = await response.Content.ReadAsStreamAsync();
 
-        var responseData = await JsonDocument.ParseAsync(responseBody);
+        using var responseData = await JsonDocument.ParseAsync(responseBody);
 
         responseData.RootElement.GetProperty("id").GetString().Should().NotBeNullOrWhiteSpace();
         responseData.RootElement.GetProperty("title").GetString().Should().NotBeNullOrWhiteSpace().And.Be(request.Title);
