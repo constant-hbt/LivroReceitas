@@ -3,7 +3,6 @@ using RecipeBook.Domain.Dtos;
 using RecipeBook.Domain.Entities;
 using RecipeBook.Domain.Extensions;
 using RecipeBook.Domain.Repositories.Recipe;
-using System.Linq;
 
 namespace RecipeBook.Infrastructure.DataAccess.Repositories;
 public class RecipeRepository(RecipeBookDbContext dbContext) : IRecipeWriteOnlyRepository, IRecipeReadOnlyRepository
@@ -36,5 +35,15 @@ public class RecipeRepository(RecipeBookDbContext dbContext) : IRecipeWriteOnlyR
                                 || recipe.Ingredients.Any(ingredient => ingredient.Item.Contains(filter.RecipeTitle_Ingredient)));
 
         return await query.ToListAsync();
+    }
+
+    public async Task<Recipe?> GetById(User user, long recipeId)
+    {
+        return await _dbContext.Recipes
+            .AsNoTracking()
+            .Include(r => r.Ingredients)
+            .Include(r => r.Instructions)
+            .Include(r => r.DishTypes)
+            .FirstOrDefaultAsync(recipe => recipe.Active && recipe.Id == recipeId && recipe.UserId == user.Id);
     }
 }

@@ -171,6 +171,9 @@
   <data name="PASSWORD_INVALID" xml:space="preserve">
     <value>A senha deve ter mais de 6 caracteres.</value>
   </data>
+  <data name="RECIPE_NOT_FOUND" xml:space="preserve">
+    <value>Receita não encontrada.</value>
+  </data>
   <data name="RECIPE_TITLE_EMPTY" xml:space="preserve">
     <value>O título da receita não deve estar vazio.</value>
   </data>

@@ -29,6 +29,11 @@ public class ExceptionFilter : IExceptionFilter
             context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
             context.Result = new UnauthorizedObjectResult(new ResponseErrorJson(invalidLoginException.Message));
         }
+        else if (context.Exception is NotFoundException notFoundException)
+        {
+            context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+            context.Result = new NotFoundObjectResult(new ResponseErrorJson(notFoundException.Message));
+        }
     }
 
     private static void ThrowUnkownException(ExceptionContext context)
