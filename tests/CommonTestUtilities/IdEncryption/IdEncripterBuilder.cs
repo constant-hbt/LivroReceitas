@@ -1,7 +1,7 @@
 ﻿using Sqids;
 
 namespace CommonTestUtilities.IdEncryption;
-internal class IdEncripterBuilder
+public class IdEncripterBuilder
 {
     public static SqidsEncoder<long> Build()
     {
