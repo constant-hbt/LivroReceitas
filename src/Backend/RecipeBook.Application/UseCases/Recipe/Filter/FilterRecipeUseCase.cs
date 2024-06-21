@@ -7,11 +7,18 @@ using RecipeBook.Domain.Services.LoggedUser;
 using RecipeBook.Exceptions.ExceptionsBase;
 
 namespace RecipeBook.Application.UseCases.Recipe.Filter;
-public class FilterRecipeUseCase(IMapper mapper, ILoggedUser loggedUser, IRecipeReadOnlyRepository repository) : IFilterRecipeUseCase
+public class FilterRecipeUseCase : IFilterRecipeUseCase
 {
-    private readonly IMapper _mapper = mapper;
-    private readonly ILoggedUser _loggedUser = loggedUser;
-    private readonly IRecipeReadOnlyRepository _repository = repository;
+    private readonly IMapper _mapper;
+    private readonly ILoggedUser _loggedUser;
+    private readonly IRecipeReadOnlyRepository _repository;
+
+    public FilterRecipeUseCase(IMapper mapper, ILoggedUser loggedUser, IRecipeReadOnlyRepository repository)
+    {
+        _mapper = mapper;
+        _loggedUser = loggedUser;
+        _repository = repository;
+    }
 
     public async Task<ResponseRecipesJson> Execute(RequestFilterRecipeJson request)
     {

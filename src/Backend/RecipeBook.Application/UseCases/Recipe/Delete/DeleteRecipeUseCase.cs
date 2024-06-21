@@ -28,8 +28,7 @@ public class DeleteRecipeUseCase : IDeleteRecipeUseCase
     {
         var loggedUser = await _loggedUser.User();
 
-        var _ = await _recipeReadOnlyRepository.GetById(loggedUser, recipeId)
-                        ?? throw new NotFoundException(ResourceMessagesExceptions.RECIPE_NOT_FOUND);
+        _ = await _recipeReadOnlyRepository.GetById(loggedUser, recipeId) ?? throw new NotFoundException(ResourceMessagesExceptions.RECIPE_NOT_FOUND);
 
         await _recipeWriteOnlyRepository.Delete(recipeId);
 
