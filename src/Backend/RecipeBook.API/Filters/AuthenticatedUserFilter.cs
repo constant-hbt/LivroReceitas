@@ -32,7 +32,7 @@ public class AuthenticatedUserFilter : IAsyncAuthorizationFilter
             var exist = await _repository.ExistActiveUserWithIdentifier(userIdentifier);
 
             if (exist.IsFalse())
-                throw new RecipeBookException(ResourceMessagesExceptions.USER_WITHOUT_PERMISSION_ACCESS_RESOURCE);
+                throw new UserWithoutAccessPermissionException();
         }
         catch (SecurityTokenExpiredException)
         {
@@ -56,7 +56,7 @@ public class AuthenticatedUserFilter : IAsyncAuthorizationFilter
         var authentication = context.HttpContext.Request.Headers.Authorization.ToString();
 
         if (string.IsNullOrWhiteSpace(authentication))
-            throw new RecipeBookException(ResourceMessagesExceptions.NO_TOKEN);
+            throw new NoTokenException();
 
         return authentication["Bearer ".Length..].Trim();
     }
