@@ -1,9 +1,9 @@
 ﻿using System.Net;
 
 namespace RecipeBook.Exceptions.ExceptionsBase;
-public class InvalidLoginException : RecipeBookException
+public class UserWithoutAccessPermissionException : RecipeBookException
 {
-    public InvalidLoginException() : base(ResourceMessagesExceptions.EMAIL_OR_PASSWORD_INVALID) { }
+    public UserWithoutAccessPermissionException() : base(ResourceMessagesExceptions.USER_WITHOUT_PERMISSION_ACCESS_RESOURCE) { }
 
     public override IList<string> GetErrorMessages() => [Message];
 

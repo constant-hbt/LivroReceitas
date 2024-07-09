@@ -41,7 +41,7 @@ public class RegisterRecipeUseCaseTest
         Func<Task<ResponseRegisteredRecipeJson>> act = async () => await useCase.Execute(request);
 
         (await act.Should().ThrowAsync<ErrorOnValidationException>())
-            .Where(e => e.ErrorMessages.Count == 1 && e.ErrorMessages.Contains(ResourceMessagesExceptions.RECIPE_TITLE_EMPTY));
+            .Where(e => e.GetErrorMessages().Count == 1 && e.GetErrorMessages().Contains(ResourceMessagesExceptions.RECIPE_TITLE_EMPTY));
     }
 
     private static RegisterRecipeUseCase CreateUseCase(RecipeBook.Domain.Entities.User user)

@@ -1,9 +1,9 @@
 ﻿using System.Net;
 
 namespace RecipeBook.Exceptions.ExceptionsBase;
-public class InvalidLoginException : RecipeBookException
+public class NoTokenException : RecipeBookException
 {
-    public InvalidLoginException() : base(ResourceMessagesExceptions.EMAIL_OR_PASSWORD_INVALID) { }
+    public NoTokenException() : base(ResourceMessagesExceptions.NO_TOKEN) { }
 
     public override IList<string> GetErrorMessages() => [Message];
 
