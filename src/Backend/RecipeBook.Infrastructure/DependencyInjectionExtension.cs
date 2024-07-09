@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenAI_API;
 using RecipeBook.Domain.Enums;
 using RecipeBook.Domain.Repositories;
 using RecipeBook.Domain.Repositories.Recipe;
@@ -9,6 +10,7 @@ using RecipeBook.Domain.Repositories.User;
 using RecipeBook.Domain.Security.Cryptography;
 using RecipeBook.Domain.Security.Tokens;
 using RecipeBook.Domain.Services.LoggedUser;
+using RecipeBook.Domain.Services.OpenAI;
 using RecipeBook.Infrastructure.DataAccess;
 using RecipeBook.Infrastructure.DataAccess.Repositories;
 using RecipeBook.Infrastructure.Extensions;
@@ -16,6 +18,7 @@ using RecipeBook.Infrastructure.Security.Cryptography;
 using RecipeBook.Infrastructure.Security.Tokens.Access.Generator;
 using RecipeBook.Infrastructure.Security.Tokens.Access.Validator;
 using RecipeBook.Infrastructure.Services.LoggedUser;
+using RecipeBook.Infrastructure.Services.OpenAI;
 using System.Reflection;
 
 namespace RecipeBook.Infrastructure;
@@ -27,6 +30,7 @@ public static class DependencyInjectionExtension
         AddRepositories(services);
         AddLoggedUser(services);
         AddTokens(services, configuration);
+        AddOpenAI(services, configuration);
 
         if (configuration.IsUnitTestEnviroment())
             return;
@@ -152,5 +156,15 @@ public static class DependencyInjectionExtension
     {
         var additionalKey = configuration.GetValue<string>("Settings:Password:AdditionalKey")!;
         services.AddScoped<IPasswordEncripter>(options => new Sha512Encripter(additionalKey));
+    }
+
+    private static void AddOpenAI(IServiceCollection services, IConfigurationManager configuration)
+    {
+        services.AddScoped<IGenerateRecipeAI, ChatGPTService>();
+
+        var apiKey = configuration.GetValue<string>("Settings:OpenAI:ApiKey")!;
+        var authentication = new APIAuthentication(apiKey);
+
+        services.AddScoped<IOpenAIAPI>(option => new OpenAIAPI(authentication));
     }
 }
