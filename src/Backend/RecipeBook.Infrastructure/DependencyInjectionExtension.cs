@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenAI_API;
 using RecipeBook.Domain.Enums;
+using RecipeBook.Domain.Extensions;
 using RecipeBook.Domain.Repositories;
 using RecipeBook.Domain.Repositories.Recipe;
 using RecipeBook.Domain.Repositories.User;
@@ -176,8 +177,9 @@ public static class DependencyInjectionExtension
     {
         services.AddScoped<IGenerateRecipeAI, ChatGPTService>();
 
-        var connectionString = configuration.GetValue<string>("Settings:BlobStorage:Azure")!;
+        var connectionString = configuration.GetValue<string>("Settings:BlobStorage:Azure");
 
-        services.AddScoped<IBlobStorageService>(option => new AzureStorageService(new BlobServiceClient(connectionString)));
+        if (connectionString.NotEmpty())
+            services.AddScoped<IBlobStorageService>(option => new AzureStorageService(new BlobServiceClient(connectionString!)));
     }
 }
