@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using FileTypeChecker.Extensions;
-using FileTypeChecker.Types;
 using RecipeBook.Application.Extensions;
 using RecipeBook.Communication.Requests;
 using RecipeBook.Communication.Responses;

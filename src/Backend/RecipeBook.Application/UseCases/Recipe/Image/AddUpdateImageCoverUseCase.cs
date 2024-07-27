@@ -1,6 +1,4 @@
-﻿using FileTypeChecker.Extensions;
-using FileTypeChecker.Types;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using RecipeBook.Application.Extensions;
 using RecipeBook.Domain.Extensions;
 using RecipeBook.Domain.Repositories;
