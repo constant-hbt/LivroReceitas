@@ -1,6 +1,7 @@
 ﻿using FileTypeChecker.Extensions;
 using FileTypeChecker.Types;
 using Microsoft.AspNetCore.Http;
+using RecipeBook.Application.Extensions;
 using RecipeBook.Domain.Extensions;
 using RecipeBook.Domain.Repositories;
 using RecipeBook.Domain.Repositories.Recipe;
@@ -38,20 +39,19 @@ public class AddUpdateImageCoverUseCase : IAddUpdateImageCoverUseCase
 
         var fileStream = file.OpenReadStream();
 
-        if (fileStream.Is<PortableNetworkGraphic>().IsFalse() && fileStream.Is<JointPhotographicExpertsGroup>().IsFalse())
+        var (isValidImage, extension) = fileStream.ValidateAndGetImageExtension();
+
+        if (isValidImage.IsFalse())
             throw new ErrorOnValidationException([ResourceMessagesExceptions.ONLY_IMAGES_ACCEPTED]);
 
         if (recipe.ImageIdentifier.IsEmpty())
         {
-            recipe.ImageIdentifier = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            recipe.ImageIdentifier = $"{Guid.NewGuid()}{extension}";
 
             _repository.Update(recipe);
 
             await _unitOfWork.Commit();
         }
-
-        // Permitindo que a stream seja lida novamente
-        fileStream.Position = 0;
 
         await _blobStorageService.Upload(loggedUser, fileStream, recipe.ImageIdentifier!);
     }
