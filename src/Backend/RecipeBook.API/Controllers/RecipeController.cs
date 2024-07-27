@@ -19,7 +19,7 @@ public class RecipeController : RecipeBookBaseController
     [HttpPost]
     [ProducesResponseType(typeof(ResponseRegisteredRecipeJson), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Register([FromServices] IRegisterRecipeUseCase useCase, [FromBody] RequestRecipeJson request)
+    public async Task<IActionResult> Register([FromServices] IRegisterRecipeUseCase useCase, [FromForm] RequestRegisterRecipeFormData request)
     {
         var response = await useCase.Execute(request);
 
@@ -79,7 +79,7 @@ public class RecipeController : RecipeBookBaseController
         return Ok(response);
     }
 
-    [HttpPut("image/{id}")]
+    [HttpPatch("image/{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
