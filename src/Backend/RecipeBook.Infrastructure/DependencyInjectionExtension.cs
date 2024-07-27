@@ -1,4 +1,5 @@
-﻿using FluentMigrator.Runner;
+﻿using Azure.Storage.Blobs;
+using FluentMigrator.Runner;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,7 @@ using RecipeBook.Domain.Security.Cryptography;
 using RecipeBook.Domain.Security.Tokens;
 using RecipeBook.Domain.Services.LoggedUser;
 using RecipeBook.Domain.Services.OpenAI;
+using RecipeBook.Domain.Services.Storage;
 using RecipeBook.Infrastructure.DataAccess;
 using RecipeBook.Infrastructure.DataAccess.Repositories;
 using RecipeBook.Infrastructure.Extensions;
@@ -19,6 +21,7 @@ using RecipeBook.Infrastructure.Security.Tokens.Access.Generator;
 using RecipeBook.Infrastructure.Security.Tokens.Access.Validator;
 using RecipeBook.Infrastructure.Services.LoggedUser;
 using RecipeBook.Infrastructure.Services.OpenAI;
+using RecipeBook.Infrastructure.Services.Storage;
 using System.Reflection;
 
 namespace RecipeBook.Infrastructure;
@@ -31,6 +34,7 @@ public static class DependencyInjectionExtension
         AddLoggedUser(services);
         AddTokens(services, configuration);
         AddOpenAI(services, configuration);
+        AddAzureStorage(services, configuration);
 
         if (configuration.IsUnitTestEnviroment())
             return;
@@ -166,5 +170,14 @@ public static class DependencyInjectionExtension
         var authentication = new APIAuthentication(apiKey);
 
         services.AddScoped<IOpenAIAPI>(option => new OpenAIAPI(authentication));
+    }
+
+    private static void AddAzureStorage(IServiceCollection services, IConfigurationManager configuration)
+    {
+        services.AddScoped<IGenerateRecipeAI, ChatGPTService>();
+
+        var connectionString = configuration.GetValue<string>("Settings:BlobStorage:Azure")!;
+
+        services.AddScoped<IBlobStorageService>(option => new AzureStorageService(new BlobServiceClient(connectionString)));
     }
 }

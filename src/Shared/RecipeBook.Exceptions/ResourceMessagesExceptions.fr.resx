@@ -171,6 +171,9 @@
   <data name="NO_TOKEN" xml:space="preserve">
     <value>Connectez-vous ou cadastrez-vous pour accéder.</value>
   </data>
+  <data name="ONLY_IMAGES_ACCEPTED" xml:space="preserve">
+    <value>Seules les images (PNG, JPG, JPEG) sont acceptées.</value>
+  </data>
   <data name="PASSWORD_DIFFERENT_CURRENT_PASSWORD" xml:space="preserve">
     <value>Mot de passe différent du mot de passe actuel.</value>
   </data>
