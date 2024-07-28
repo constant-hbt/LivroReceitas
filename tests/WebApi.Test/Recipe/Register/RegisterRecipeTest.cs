@@ -26,7 +26,7 @@ public class RegisterRecipeTest : RecipeBookClassFixture
 
         var token = JwtTokenGeneratorBuilder.Build().Generate(_userIdentifier);
 
-        var response = await DoPost(METHOD, request, token: token);
+        var response = await DoPostFormData(METHOD, request, token: token);
 
         response.StatusCode.Should().Be(HttpStatusCode.Created);
 
@@ -47,7 +47,7 @@ public class RegisterRecipeTest : RecipeBookClassFixture
 
         var token = JwtTokenGeneratorBuilder.Build().Generate(_userIdentifier);
 
-        var response = await DoPost(METHOD, request, token: token, culture: culture);
+        var response = await DoPostFormData(METHOD, request, token: token, culture: culture);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
