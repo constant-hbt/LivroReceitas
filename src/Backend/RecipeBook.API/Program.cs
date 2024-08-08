@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using RecipeBook.API.BackgroundServices;
 using RecipeBook.API.Converters;
 using RecipeBook.API.Filters;
 using RecipeBook.API.Middleware;
@@ -72,6 +73,8 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 // Permite a injeção de dependências do HttpContextAccessor, utilizado para resgatar o userIdentifier contido no token JWT das requsições
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddHostedService<DeleteUserService>();
 
 var app = builder.Build();
 
