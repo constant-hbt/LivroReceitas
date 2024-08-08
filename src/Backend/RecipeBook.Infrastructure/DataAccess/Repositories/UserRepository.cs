@@ -4,7 +4,7 @@ using RecipeBook.Domain.Repositories.User;
 
 namespace RecipeBook.Infrastructure.DataAccess.Repositories;
 
-public class UserRepository(RecipeBookDbContext dbContext) : IUserReadOnlyRepository, IUserWriteOnlyRepository, IUserUpdateOnlyRepository
+public class UserRepository(RecipeBookDbContext dbContext) : IUserReadOnlyRepository, IUserWriteOnlyRepository, IUserUpdateOnlyRepository, IUserDeleteOnlyRepository
 {
     private readonly RecipeBookDbContext _dbContext = dbContext;
 
@@ -48,5 +48,21 @@ public class UserRepository(RecipeBookDbContext dbContext) : IUserReadOnlyReposi
     public void Update(User user)
     {
         _dbContext.Users.Update(user);
+    }
+
+    public async Task DeleteAccount(Guid userIdentifier)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.UserIdentifier == userIdentifier);
+
+        if (user is null)
+            return;
+
+        var recipes = _dbContext.Recipes.Where(recipe => recipe.UserId == user.Id);
+
+        // Como os elementos que dependem da receita estão marcados como ON DELETE CASCADE
+        // não é necessário deletar eles um por um
+        _dbContext.Recipes.RemoveRange(recipes); 
+
+        _dbContext.Users.Remove(user);
     }
 }

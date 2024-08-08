@@ -1,4 +1,5 @@
-﻿using Azure.Storage.Blobs;
+﻿using Azure.Messaging.ServiceBus;
+using Azure.Storage.Blobs;
 using FluentMigrator.Runner;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,7 @@ using RecipeBook.Domain.Security.Cryptography;
 using RecipeBook.Domain.Security.Tokens;
 using RecipeBook.Domain.Services.LoggedUser;
 using RecipeBook.Domain.Services.OpenAI;
+using RecipeBook.Domain.Services.ServiceBus;
 using RecipeBook.Domain.Services.Storage;
 using RecipeBook.Infrastructure.DataAccess;
 using RecipeBook.Infrastructure.DataAccess.Repositories;
@@ -22,13 +24,14 @@ using RecipeBook.Infrastructure.Security.Tokens.Access.Generator;
 using RecipeBook.Infrastructure.Security.Tokens.Access.Validator;
 using RecipeBook.Infrastructure.Services.LoggedUser;
 using RecipeBook.Infrastructure.Services.OpenAI;
+using RecipeBook.Infrastructure.Services.ServiceBus;
 using RecipeBook.Infrastructure.Services.Storage;
 using System.Reflection;
 
 namespace RecipeBook.Infrastructure;
 public static class DependencyInjectionExtension
 {
-    public static void AddInfrastructure(this IServiceCollection services, IConfigurationManager configuration)
+    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         AddPasswordEncripter(services, configuration);
         AddRepositories(services);
@@ -36,6 +39,7 @@ public static class DependencyInjectionExtension
         AddTokens(services, configuration);
         AddOpenAI(services, configuration);
         AddAzureStorage(services, configuration);
+        AddQueue(services, configuration);
 
         if (configuration.IsUnitTestEnviroment())
             return;
@@ -61,7 +65,7 @@ public static class DependencyInjectionExtension
             throw new NotImplementedException();
     }
 
-    private static void AddDbContext_PostgreSQL(IServiceCollection services, IConfigurationManager configuration)
+    private static void AddDbContext_PostgreSQL(IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.ConnectionString();
 
@@ -71,7 +75,7 @@ public static class DependencyInjectionExtension
         });
     }
 
-    private static void AddDbContext_MySql(IServiceCollection services, IConfigurationManager configuration)
+    private static void AddDbContext_MySql(IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.ConnectionString();
         var serverVersion = ServerVersion.AutoDetect(connectionString);
@@ -82,7 +86,7 @@ public static class DependencyInjectionExtension
         });
     }
 
-    private static void AddDbContext_SqlServer(IServiceCollection services, IConfigurationManager configuration)
+    private static void AddDbContext_SqlServer(IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.ConnectionString();
 
@@ -99,12 +103,13 @@ public static class DependencyInjectionExtension
         services.AddScoped<IUserWriteOnlyRepository, UserRepository>();
         services.AddScoped<IUserReadOnlyRepository, UserRepository>();
         services.AddScoped<IUserUpdateOnlyRepository, UserRepository>();
+        services.AddScoped<IUserDeleteOnlyRepository, UserRepository>();
         services.AddScoped<IRecipeWriteOnlyRepository, RecipeRepository>();
         services.AddScoped<IRecipeReadOnlyRepository, RecipeRepository>();
         services.AddScoped<IRecipeUpdateOnlyRepository, RecipeRepository>();
     }
 
-    private static void AddFluentMigrator_PostgreSQL(IServiceCollection services, IConfigurationManager configuration)
+    private static void AddFluentMigrator_PostgreSQL(IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.ConnectionString();
 
@@ -117,7 +122,7 @@ public static class DependencyInjectionExtension
         });
     }
 
-    private static void AddFluentMigrator_MySql(IServiceCollection services, IConfigurationManager configuration)
+    private static void AddFluentMigrator_MySql(IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.ConnectionString();
 
@@ -130,7 +135,7 @@ public static class DependencyInjectionExtension
         });
     }
 
-    private static void AddFluentMigrator_SqlServer(IServiceCollection services, IConfigurationManager configuration)
+    private static void AddFluentMigrator_SqlServer(IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.ConnectionString();
 
@@ -143,7 +148,7 @@ public static class DependencyInjectionExtension
         });
     }
 
-    private static void AddTokens(IServiceCollection services, IConfigurationManager configuration)
+    private static void AddTokens(IServiceCollection services, IConfiguration configuration)
     {
         var expirationTimeMinutes = configuration.GetValue<uint>("Settings:Jwt:ExpirationTimeMinutes");
         var signingKey = configuration.GetValue<string>("Settings:Jwt:SigningKey")!;
@@ -157,13 +162,13 @@ public static class DependencyInjectionExtension
         services.AddScoped<ILoggedUser, LoggedUser>();
     }
 
-    private static void AddPasswordEncripter(IServiceCollection services, IConfigurationManager configuration)
+    private static void AddPasswordEncripter(IServiceCollection services, IConfiguration configuration)
     {
         var additionalKey = configuration.GetValue<string>("Settings:Password:AdditionalKey")!;
         services.AddScoped<IPasswordEncripter>(options => new Sha512Encripter(additionalKey));
     }
 
-    private static void AddOpenAI(IServiceCollection services, IConfigurationManager configuration)
+    private static void AddOpenAI(IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IGenerateRecipeAI, ChatGPTService>();
 
@@ -173,7 +178,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IOpenAIAPI>(option => new OpenAIAPI(authentication));
     }
 
-    private static void AddAzureStorage(IServiceCollection services, IConfigurationManager configuration)
+    private static void AddAzureStorage(IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IGenerateRecipeAI, ChatGPTService>();
 
@@ -181,5 +186,31 @@ public static class DependencyInjectionExtension
 
         if (connectionString.NotEmpty())
             services.AddScoped<IBlobStorageService>(option => new AzureStorageService(new BlobServiceClient(connectionString!)));
+    }
+
+    private static void AddQueue(IServiceCollection services, IConfiguration configuration)
+    {
+        const string QUEUE_NAME = "user"; // User -> Nome da fila no Azure
+        var connectionString = configuration.GetValue<string>("Settings:ServiceBus:DeleteUserAccount")!;
+
+        var client = new ServiceBusClient(connectionString, new ServiceBusClientOptions
+        {
+            TransportType = ServiceBusTransportType.AmqpWebSockets
+        });
+
+        // Criando o ServiceBusProcessor e registrando-o como singleton
+        services.AddSingleton(sp =>
+        {
+            return client.CreateProcessor(QUEUE_NAME, new ServiceBusProcessorOptions
+            {
+                MaxConcurrentCalls = 1
+            });
+        });
+
+        // Registrando DeleteUserQueue
+        services.AddScoped<IDeleteUserQueue, DeleteUserQueue>(sp =>
+        {
+            return new DeleteUserQueue(client.CreateSender(QUEUE_NAME));
+        });
     }
 }
