@@ -27,6 +27,11 @@ public class UserRepository(RecipeBookDbContext dbContext) : IUserReadOnlyReposi
             .FirstOrDefaultAsync(user => user.Active && user.Email.Equals(email) && user.Password.Equals(password));
     }
 
+    public async Task<User?> GetByEmail(string email)
+    {
+        return await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(user => user.Active && user.Email.Equals(email));
+    }
+
     public async Task<bool> ExistActiveUserWithIdentifier(Guid userIdentifier)
     {
         return await _dbContext.Users.AnyAsync(user => user.Active && user.UserIdentifier.Equals(userIdentifier));

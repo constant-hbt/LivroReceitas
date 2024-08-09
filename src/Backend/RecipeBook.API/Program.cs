@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.OpenApi.Models;
 using RecipeBook.API.BackgroundServices;
 using RecipeBook.API.Converters;
@@ -5,6 +6,7 @@ using RecipeBook.API.Filters;
 using RecipeBook.API.Middleware;
 using RecipeBook.API.Token;
 using RecipeBook.Application;
+using RecipeBook.Domain.Extensions;
 using RecipeBook.Domain.Security.Tokens;
 using RecipeBook.Infrastructure;
 using RecipeBook.Infrastructure.Extensions;
@@ -74,7 +76,12 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 // Permite a injeção de dependências do HttpContextAccessor, utilizado para resgatar o userIdentifier contido no token JWT das requsições
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddHostedService<DeleteUserService>();
+if (builder.Configuration.IsUnitTestEnviroment().IsFalse())
+{
+    builder.Services.AddHostedService<DeleteUserService>();
+
+    AddGoogleAuthentication();
+}
 
 var app = builder.Build();
 
@@ -108,6 +115,22 @@ void MigrateDatabase()
     var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
 
     DatabaseMigration.Migrate(databaseType, connectionString, serviceScope.ServiceProvider);
+}
+
+void AddGoogleAuthentication()
+{
+    var clientId = builder.Configuration.GetValue<string>("Settings:Google:ClientId")!;
+    var clientSecret = builder.Configuration.GetValue<string>("Settings:Google:ClientSecret")!;
+
+    builder.Services.AddAuthentication(config =>
+    {
+        config.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    }).AddCookie()
+    .AddGoogle(googleOptions =>
+    {
+        googleOptions.ClientId = clientId;
+        googleOptions.ClientSecret = clientSecret;
+    });
 }
 
 // Necessário para ser utilizado em testes de integração, no projeto WebApi.Test
