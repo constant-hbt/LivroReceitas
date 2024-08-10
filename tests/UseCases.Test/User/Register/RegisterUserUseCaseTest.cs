@@ -22,13 +22,15 @@ public class RegisterUserUseCaseTest
         var passwordEncripter = PasswordEncripterBuilder.Build();
         var readRepositoryBuilder = new UserReadOnlyRepositoryBuilder();
         var accessTokenGenerator = JwtTokenGeneratorBuilder.Build();
+        var refreshTokenGenerator = RefreshTokenGeneratorBuilder.Build();
+        var tokenRepositoryBuilder = new TokenRepositoryBuilder().Build();
 
         if (email.NotEmpty())
             readRepositoryBuilder.ExistActiveUserWithEmail(email);
 
         var readRepository = readRepositoryBuilder.Build();
 
-        return new RegisterUserUseCase(writeRepository, readRepository, mapper, passwordEncripter, unitOfWork, accessTokenGenerator);
+        return new RegisterUserUseCase(writeRepository, readRepository, mapper, passwordEncripter, unitOfWork, accessTokenGenerator, refreshTokenGenerator, tokenRepositoryBuilder);
     }
 
     [Fact]

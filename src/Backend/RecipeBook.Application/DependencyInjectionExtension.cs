@@ -11,6 +11,7 @@ using RecipeBook.Application.UseCases.Recipe.Generate;
 using RecipeBook.Application.UseCases.Recipe.GetById;
 using RecipeBook.Application.UseCases.Recipe.Image;
 using RecipeBook.Application.UseCases.Recipe.Update;
+using RecipeBook.Application.UseCases.Token.RefreshToken;
 using RecipeBook.Application.UseCases.User.ChangePassword;
 using RecipeBook.Application.UseCases.User.Delete.Delete;
 using RecipeBook.Application.UseCases.User.Delete.Request;
@@ -68,5 +69,6 @@ public static class DependencyInjectionExtension
         services.AddScoped<IRequestDeleteUserUseCase, RequestDeleteUserUseCase>();
         services.AddScoped<IDeleteUserAccountUseCase, DeleteUserAccountUseCase>();
         services.AddScoped<IExternalLoginUseCase, ExternalLoginUseCase>();
+        services.AddScoped<IUseRefreshTokenUseCase, UseRefreshTokenUseCase>();
     }
 }

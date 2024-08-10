@@ -9,6 +9,7 @@ using RecipeBook.Domain.Enums;
 using RecipeBook.Domain.Extensions;
 using RecipeBook.Domain.Repositories;
 using RecipeBook.Domain.Repositories.Recipe;
+using RecipeBook.Domain.Repositories.Token;
 using RecipeBook.Domain.Repositories.User;
 using RecipeBook.Domain.Security.Cryptography;
 using RecipeBook.Domain.Security.Tokens;
@@ -22,6 +23,7 @@ using RecipeBook.Infrastructure.Extensions;
 using RecipeBook.Infrastructure.Security.Cryptography;
 using RecipeBook.Infrastructure.Security.Tokens.Access.Generator;
 using RecipeBook.Infrastructure.Security.Tokens.Access.Validator;
+using RecipeBook.Infrastructure.Security.Tokens.Refresh;
 using RecipeBook.Infrastructure.Services.LoggedUser;
 using RecipeBook.Infrastructure.Services.OpenAI;
 using RecipeBook.Infrastructure.Services.ServiceBus;
@@ -107,6 +109,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IRecipeWriteOnlyRepository, RecipeRepository>();
         services.AddScoped<IRecipeReadOnlyRepository, RecipeRepository>();
         services.AddScoped<IRecipeUpdateOnlyRepository, RecipeRepository>();
+        services.AddScoped<ITokenRepository, TokenRepository>();
     }
 
     private static void AddFluentMigrator_PostgreSQL(IServiceCollection services, IConfiguration configuration)
@@ -155,6 +158,7 @@ public static class DependencyInjectionExtension
 
         services.AddScoped<IAccessTokenGenerator>(options => new JwtTokenGenerator(expirationTimeMinutes, signingKey));
         services.AddScoped<IAccessTokenValidator>(options => new JwtTokenValidator(signingKey));
+        services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
     }
 
     private static void AddLoggedUser(IServiceCollection services)
