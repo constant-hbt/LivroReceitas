@@ -189,6 +189,12 @@
   <data name="RECIPE_TITLE_EMPTY" xml:space="preserve">
     <value>O título da receita não deve estar vazio.</value>
   </data>
+  <data name="REFRESH_TOKEN_EXPIRED" xml:space="preserve">
+    <value>O refresh token está expirado.</value>
+  </data>
+  <data name="REFRESH_TOKEN_NOT_FOUND" xml:space="preserve">
+    <value>A solicitação não possui refresh token.</value>
+  </data>
   <data name="TWO_OR_MORE_INSTRUCTIONS_SAME_ORDER" xml:space="preserve">
     <value>Duas ou mais instruções possuem a mesma ordem.</value>
   </data>
