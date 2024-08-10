@@ -6,7 +6,6 @@ using CommonTestUtilities.Tokens;
 using FluentAssertions;
 using RecipeBook.Application.UseCases.Login.DoLogin;
 using RecipeBook.Communication.Requests;
-using RecipeBook.Domain.Repositories.User;
 using RecipeBook.Exceptions;
 using RecipeBook.Exceptions.ExceptionsBase;
 using Xunit;
@@ -21,7 +20,7 @@ public class DoLoginUseCaseTest
         var accessTokenGenerator = JwtTokenGeneratorBuilder.Build();
 
         if (user is not null)
-            userReadOnlyRepositoryBuilder.GetByEmailAndPassword(user);
+            userReadOnlyRepositoryBuilder.GetByEmail(user);
 
         var userReadOnlyRepository = userReadOnlyRepositoryBuilder.Build();
 
