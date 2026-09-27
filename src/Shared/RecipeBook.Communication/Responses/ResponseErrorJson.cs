@@ -3,15 +3,15 @@ public class ResponseErrorJson
 {
     public ResponseErrorJson(IList<string> errors)
     {
-        Errors = errors ?? new List<string>();
+        Errors = errors ?? [];
     }
 
     public ResponseErrorJson(string error)
     {
-        Errors = new List<string>
-        {
+        Errors =
+        [
             error ?? string.Empty
-        };
+        ];
     }
 
     public IList<string> Errors { get; }
